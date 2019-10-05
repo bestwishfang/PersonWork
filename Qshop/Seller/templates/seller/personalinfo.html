@@ -1,0 +1,70 @@
+{% extends 'seller/base.html' %}
+
+
+{% block title %}
+    Personal Info
+{% endblock %}
+
+
+{% block photo %}
+    <img class="img-profile rounded-circle" src="/static/{{ login_user.photo }}">
+{% endblock %}
+
+
+{% block container-fluid %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">个人中心</h1>
+            <a href="/seller/register/" class="d-none d-sm-inline-block btn btn-success">创建用户</a>
+        </div>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-success">个人信息</h6>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <table class="table">
+                    <tr>
+                        <td rowspan="3" style="width: 260px">
+                            <img src="/static/{{ login_user.photo }}" alt="" style="width: 260px; border-radius: 5px;">
+                            <input type="file" name="photo" class="btn btn-success" style="width: 260px">
+                        </td>
+                        <th style="vertical-align: middle;">昵称：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="username" value="{{ login_user.username }}"></td>
+                        <th style="vertical-align: middle;">性别：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="gender" value="{{ login_user.gender }}"></td>
+                    </tr>
+                    <tr>
+                        <th style="vertical-align: middle;">年龄：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="age" value="{{ login_user.age }}"></td>
+                        <th style="vertical-align: middle;">电话：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="phone_number" value="{{ login_user.phone_number }}"></td>
+                    </tr>
+                    <tr>
+                        <th style="vertical-align: middle;">邮箱：</th>
+                        <td style="vertical-align: middle;"><input type="email"  value="{{ login_user.email }}" disabled></td>
+                        <th style="vertical-align: middle;">地址：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="address" value="{{ login_user.address }}"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="5" style="text-align: right;">
+                            <input type="submit" value="完善个人信息" class="btn btn-success">
+                        </th>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <!-- Page level plugins -->
+    <script src="/static/seller/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/static/seller/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="/static/seller/js/demo/datatables-demo.js"></script>
+{% endblock %}

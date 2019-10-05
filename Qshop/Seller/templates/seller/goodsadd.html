@@ -1,0 +1,93 @@
+{% extends 'seller/base.html' %}
+
+{% block title %}
+    GoodsAdd
+{% endblock %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block photo %}
+    <img class="img-profile rounded-circle" src="/static/{{ login_user.photo }}">
+{% endblock %}
+
+{% block container-fluid %}
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">添加商品</h1>
+            <a href="/seller/goods/" class="d-none d-sm-inline-block btn btn-success">查看商品</a>
+        </div>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-success">商品信息</h6>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <table class="table">
+                    <tr>
+                        <th style="vertical-align: middle;">商品编号：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="goods_num" value=""></td>
+                        <th style="vertical-align: middle;">商品名称：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="goods_name" value=""></td>
+                    </tr>
+                    <tr>
+                        <th style="vertical-align: middle;">商品价格：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="goods_price" value=""></td>
+                        <th style="vertical-align: middle;">商品数量：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="goods_count" value=""></td>
+                    </tr>
+                    <tr>
+                        <th style="vertical-align: middle;">商品产地：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="goods_location" value=""></td>
+                        <th style="vertical-align: middle;">保质期：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="goods_safe_date" value=""></td>
+                    </tr>
+                    <tr>
+                        <th style="vertical-align: middle;">生产日期：</th>
+                        <td style="vertical-align: middle;"><input type="text" name="goods_pro_time" value=""></td>
+                        <th style="vertical-align: middle;">商品类型：</th>
+                        <td style="vertical-align: middle;">
+                            <select name="goods_type" id="">
+                                <option value="1">新鲜水果</option>
+                                <option value="2">海鲜水产</option>
+                                <option value="3">猪牛羊肉</option>
+                                <option value="4">禽类蛋品</option>
+                                <option value="5">新鲜蔬菜</option>
+                                <option value="6">速冻食品</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="vertical-align: middle;">商品简介：</th>
+                        <td style="vertical-align: middle;" colspan="3">
+                            <input type="text" name="goods_description" value="" style="width: 87%;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="vertical-align: middle;">商品图片：</th>
+                        <td colspan="2" style="text-align: left;">
+                            <input type="file" name="goods_picture" class="btn btn-success">
+                        </td>
+                        <td>
+                            <span style="color: red;">{{ err_msg }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="4" style="text-align: right;">
+                            <input type="submit" value="提交" class="btn btn-success btn-user btn-block">
+                        </th>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+
+{% block script %}
+
+{% endblock %}

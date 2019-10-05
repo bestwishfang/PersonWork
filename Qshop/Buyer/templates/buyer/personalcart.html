@@ -1,0 +1,119 @@
+{% extends 'buyer/base.html' %}
+
+{% block tilte %}
+    天天生鲜-购物车
+{% endblock %}
+
+
+{% block search %}
+	<div class="search_bar clearfix">
+		<a href="/" class="logo fl"><img src="/static/buyer/images/logo.png"></a>
+		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;购物车</div>
+		<div class="search_con fr">
+			<input type="text" class="input_text fl" name="" placeholder="搜索商品">
+			<input type="button" class="input_btn fr" name="" value="搜索">
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block content %}
+	<div class="total_count">全部商品<em>{{ count }}</em>件</div>
+	<ul class="cart_list_th clearfix">
+		<li class="col01">商品名称</li>
+		<li class="col02">商品单位</li>
+		<li class="col03">商品价格</li>
+		<li class="col04">数量</li>
+		<li class="col05">小计</li>
+		<li class="col06">操作</li>
+	</ul>
+
+    <form action="/buyer/neworderinfo/">
+        {% for goods in cart_goods %}
+            <ul class="cart_list_td clearfix">
+                <li class="col01"><input class="goods_check" type="checkbox" name="check_{{ goods.goods.id }}"></li>
+                <li class="col02"><img src="/static/{{ goods.goods.goods_picture }}"></li>
+                <li class="col03">{{ goods.goods.goods_name }}<br><em id="price">{{ goods.goods.goods_price }}元/{{ goods.goods_unit }}</em></li>
+                <li class="col04">{{ goods.goods_unit }}</li>
+                <li class="col05">{{ goods.goods.goods_price }}元</li>
+                <li class="col06">
+                    <div class="num_add">
+                        <a href="javascript:;" class="add fl" onclick="add_goods({{ goods.goods.id }}, {{ goods.goods.goods_count }});">+</a>
+                        <input id="goods_count_{{ goods.goods.id }}" type="text" class="num_show fl" name="count_{{ goods.goods.id }}" value="{{ goods.count }}">
+                        <a href="javascript:;" class="minus fl" onclick="reduce_goods({{ goods.goods.id }});">-</a>
+                    </div>
+                </li>
+                <li class="col07"><em id="goods_total">{{ goods.total_price }}元</li>
+                <li class="col08"><a href="javascript:;">删除</a></li>
+            </ul>
+        {% endfor %}
+    </form>
+
+	<ul class="settlements">
+		<li class="col01"><input id="allBox" type="checkbox" name=""></li>
+		<li class="col02">全选</li>
+		<li class="col03">合计(不含运费)：<span>¥</span><em>42.60</em><br>共计<b>2</b>件商品</li>
+		<li class="col04">
+            <input style="width: 170px; height:78px;background-color:#ff3d3d;text-align:center;line-height:78px;color:#fff;font-size:24px" type="submit" value="去结算">
+        </li>
+	</ul>
+{% endblock %}
+
+
+{% block script %}
+    <script type="text/javascript">
+        $("#allBox").click(function () {
+            if (this.checked) {
+                $(".goods_check").prop("checked", true);
+            }else {
+                $(".goods_check").prop("checked", false);
+            }
+        });
+        $(".goods_check").each(function () {
+            $(this).click(function () {
+                if (!this.checked) {
+                    $("#allBox").prop("checked", false);
+                }
+            })
+        });
+        //  未完待续  修改Buyer_cartone
+        function add_goods(data, end) {
+            let num = parseInt($("#goods_count_" + data).val());
+            num += 1;
+            if (num > end){
+                num = end;
+            }
+            $("#goods_count_" + data).val(num);
+            // 判断加商品不能超过库存 未完待续
+
+            $.ajax({
+                url: "/buyer/ajaxaddreduce/?goods_id=" + data + "&count=" + num,
+                type: "GET",
+                success:function (data) {
+                    console.log(data);
+                },
+                error:function (error) {
+                    console.log(error);
+                }
+            })
+        }
+        function reduce_goods(data) {
+            let num = parseInt($("#goods_count_" + data).val());
+            num -= 1;
+            if (num < 1){
+                num = 1;
+            }
+            $("#goods_count_" + data).val(num);
+            $.ajax({
+                url: "/buyer/ajaxaddreduce/?goods_id=" + data + "&count=" + num,
+                type: "GET",
+                success:function (data) {
+                    console.log(data);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        }
+    </script>
+{% endblock %}

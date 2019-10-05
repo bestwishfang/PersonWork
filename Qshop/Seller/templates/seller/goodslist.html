@@ -1,0 +1,110 @@
+{% extends 'seller/base.html' %}
+
+{% block title %}
+    {{ goods_types }}
+{% endblock %}
+
+{% block style %}
+    <link href="/static/seller/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block photo %}
+    <img class="img-profile rounded-circle" src="/static/{{ login_user.photo }}">
+{% endblock %}
+
+{% block container-fluid %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">{{ goods_types }}</h1>
+            <a href="/seller/goodsadd/" class="d-none d-sm-inline-block btn btn btn-success">添加商品</a>
+        </div>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-success">{{ goods_types }}</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered dataTable">
+                                    <thead>
+                                        <tr style="text-align: center;">
+                                            <th>编号</th>
+                                            <th>名称</th>
+                                            <th>价格</th>
+                                            <th>数量</th>
+                                            <th>产地</th>
+                                            <th>生产日期</th>
+                                            <th>保质期</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for g in goods_list %}
+                                            <tr style="text-align: center;">
+                                                <td>{{ g.goods_num }}</td>
+                                                <td>{{ g.goods_name }}</td>
+                                                <td>￥{{ g.goods_price }}</td>
+                                                <td>{{ g.goods_count }}</td>
+                                                <td>{{ g.goods_location }}</td>
+                                                <td>{{ g.goods_pro_time }}</td>
+                                                <td>{{ g.goods_safe_date }}个月</td>
+                                                <td>
+                                                    <a href="" class="btn btn-success btn">修改</a>
+                                                    <a href="/seller/goods/operation/{{ g.goods_status }}/{{ g.id }}/" class="btn btn-warning btn">{{ goods_operation }}</a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot></tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-5">
+                                <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
+                                    Showing 1 to 10 of {{ goods_page.count }} enthies
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+                                    <ul class="pagination">
+                                        <li class="paginate_button page-item previous" id="dataTable_previous">
+                                            <a href="/seller/goods/{{ status }}/{{ page_prev }}/" aria-conthols="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+                                        </li>
+                                        {% for p in page_range %}
+                                        <li class="paginate_button page-item">
+                                            <a href="/seller/goods/{{ status }}/{{ p }}/" aria-conthols="dataTable" data-dt-idx="1" tabindex="0" class="page-link">{{ p }}</a>
+                                        </li>
+                                        {% endfor %}
+                                        <li class="paginate_button page-item next" id="dataTable_next">
+                                            <a href="/seller/goods/{{ status }}/{{ page_next }}/" aria-conthols="dataTable" data-dt-idx="7" tabindex="0" class="page-link">Next</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <!-- Page level plugins -->
+    <script src="/static/seller/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/static/seller/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="/static/seller/js/demo/datatables-demo.js"></script>
+{% endblock %}
+
+
+

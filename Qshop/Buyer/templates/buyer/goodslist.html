@@ -1,0 +1,98 @@
+{% extends 'buyer/base.html' %}
+
+
+{% block tilte %}
+    商品列表
+{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="#">{{ gt.label }}</a>
+	</div>
+
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+					<li>
+						<a href="#"><img src="/static/buyer/images/goods/goods001.jpg"></a>
+						<h4><a href="#">进口柠檬</a></h4>
+						<div class="prize">￥3.90</div>
+					</li>
+					<li>
+						<a href="#"><img src="/static/buyer/images/goods/goods002.jpg"></a>
+						<h4><a href="#">玫瑰香葡萄</a></h4>
+						<div class="prize">￥16.80</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<div class="sort_bar">
+				<a href="#" class="active">默认</a>
+				<a href="#">价格</a>
+				<a href="#">人气</a>
+			</div>
+
+			<ul class="goods_type_list clearfix">
+                {% for goods in goods_display %}
+				<li>
+					<a href="/buyer/goodsdetail/{{ goods.id }}/"><img src="/static/{{ goods.goods_picture }}"></a>
+					<h4><a href="/buyer/goodsdetail/{{ goods.id }}/">{{ goods.goods_name }}</a></h4>
+					<div class="operate">
+						<span class="prize">￥{{ goods.goods_price }}</span>
+						<span class="unit">{{ goods_price }}/500g</span>
+						<a id="{{ goods.id }}" href="javascript:;" class="add_goods" title="加入购物车" onclick="buyer_add_goods(this)"></a>
+					</div>
+				</li>
+                {% endfor %}
+
+			</ul>
+
+			<div class="pagenation">
+				<a href="#"><上一页</a>
+				<a href="#" class="active">1</a>
+				<a href="#">2</a>
+				<a href="#">3</a>
+				<a href="#">4</a>
+				<a href="#">5</a>
+				<a href="#">下一页></a>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+
+
+{% block script %}
+    <script type="text/javascript">
+        function buyer_add_goods(obj) {
+            let sendData={
+                "goods_id": obj.id,
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            };
+            $.ajax({
+                url: "/buyer/ajaxaddgoods/",
+                type: "POST",
+                data: sendData,
+                success: function (data) {
+                    //console.log(data);
+                    alert(data["data"]);
+                },
+                error: function (error) {
+                    console.log(error);
+                },
+            })
+        }
+
+    </script>
+{% endblock %}

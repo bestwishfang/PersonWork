@@ -1,0 +1,35 @@
+{% extends 'buyer/base.html' %}
+
+
+{% block tilte %}
+    支付信息
+{% endblock %}
+
+{% block search %}
+    <div class="search_bar clearfix">
+		<a href="/" class="logo fl"><img src="/static/buyer/images/logo.png"></a>
+		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;支付信息</div>
+		<div class="search_con fr">
+			<input id="search" type="text" class="input_text fl" name="" placeholder="搜索商品">
+			<input type="button" class="input_btn fr" name="" value="搜索" onclick="search()">
+		</div>
+	</div>
+{% endblock %}
+
+
+
+{% block nav %}
+{% endblock %}
+
+{% block content %}
+
+    <div style="margin:5% 10% 5% 10%;font-size: 18px">
+        <h1>支付结果</h1>
+        {% for k,v in request.GET.items %}
+        <div>
+            <span>{{ k }}:</span>
+            <span>{{ v }}</span>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

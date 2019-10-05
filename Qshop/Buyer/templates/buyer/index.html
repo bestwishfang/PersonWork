@@ -1,0 +1,69 @@
+{% extends 'buyer/base.html' %}
+
+{% block tilte %}
+    天天生鲜首页
+{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+
+{% block content %}
+	<div class="center_con clearfix">
+		<ul class="subnav fl">
+			<li><a href="#model01" class="fruit">新鲜水果</a></li>
+			<li><a href="#model02" class="seafood">海鲜水产</a></li>
+			<li><a href="#model03" class="meet">猪牛羊肉</a></li>
+			<li><a href="#model04" class="egg">禽类蛋品</a></li>
+			<li><a href="#model05" class="vegetables">新鲜蔬菜</a></li>
+			<li><a href="#model06" class="ice">速冻食品</a></li>
+		</ul>
+		<div class="slide fl">
+			<ul class="slide_pics">
+				<li><img src="/static/buyer/images/slide.jpg" alt="幻灯片"></li>
+				<li><img src="/static/buyer/images/slide02.jpg" alt="幻灯片"></li>
+				<li><img src="/static/buyer/images/slide03.jpg" alt="幻灯片"></li>
+				<li><img src="/static/buyer/images/slide04.jpg" alt="幻灯片"></li>
+			</ul>
+			<div class="prev"></div>
+			<div class="next"></div>
+			<ul class="points"></ul>
+		</div>
+		<div class="adv fl">
+			<a href="#"><img src="/static/buyer/images/adv01.jpg"></a>
+			<a href="#"><img src="/static/buyer/images/adv02.jpg"></a>
+		</div>
+	</div>
+    {% for data in result %}
+        <div class="list_model">
+            <div class="list_title clearfix">
+                <h3 class="fl" id="model0{{ data.gt.id }}">{{ data.gt.label }}</h3>
+                <div class="subtitle fl">
+                    <span>|</span>
+                    {% for goods in data.goods_list %}
+                        <a href="/buyer/goodsdetail/{{ goods.id }}/">{{ goods.goods_name }}</a>
+                    {% endfor %}
+
+                </div>
+                <a href="/buyer/goodslist/?ty=t&kw={{ data.gt.id }}" class="goods_more fr" id="fruit_more">查看更多 ></a>
+            </div>
+
+            <div class="goods_con clearfix">
+                <div class="goods_banner fl"><img src="/static/{{ data.gt.picture }}"></div>
+                <ul class="goods_list fl">
+                    {% for goods in data.goods_list %}
+                        <li>
+                            <h4><a href="/buyer/goodsdetail/{{ goods.id }}/">{{ goods.goods_name }}</a></h4>
+                            <a href="/buyer/goodsdetail/{{ goods.id }}/"><img src="/static/{{ goods.goods_picture }}"></a>
+                            <div class="prize">¥ {{ goods.goods_price }}</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    {% endfor %}
+{% endblock %}
+
+{% block script %}
+{% endblock %}
