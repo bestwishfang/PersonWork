@@ -17,8 +17,8 @@ def set_pwd(password):
 
 def login_valid(func):
     def inner(request, *args, **kwargs):
-        cookie_email = request.COOKIES.get('user_email')
-        session_email = request.session.get('user_email')
+        cookie_email = request.COOKIES.get('buyer_user_email')
+        session_email = request.session.get('buyer_user_email')
         if cookie_email and cookie_email == session_email:
             return func(request, *args, **kwargs)
         else:
@@ -95,8 +95,8 @@ def logout(request):
 
 
 def index(request):
-    user_id = request.COOKIES.get('buyer_user_id')
-    if user_id:
-        buyer_user = models.BuyerUser.objects.get(id=int(user_id))
+    buyer_user_id = request.COOKIES.get('buyer_user_id')
+    if buyer_user_id:
+        buyer_user = models.BuyerUser.objects.get(id=int(buyer_user_id))
 
     return render(request, 'buyer/index.html', locals())
