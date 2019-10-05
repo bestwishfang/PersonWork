@@ -5,6 +5,7 @@ import hashlib
 import requests
 import datetime
 
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Avg, Sum, Min, Max, Count, F, Q
@@ -185,3 +186,91 @@ def send_login_code(request):
         result['data'] = "请求错误！"
 
     return JsonResponse(result)
+
+
+@login_valid
+def personal_info(request):
+    user_id = request.COOKIES.get('seller_user_id')
+    login_user = models.SellerUser.objects.get(id=int(user_id))
+    if request.method == 'POST':
+        if request.FILES.get('photo'):
+            login_user.photo = request.FILES.get('photo')
+        login_user.username = request.POST.get('username')
+        login_user.gender = request.POST.get('gender')
+        login_user.age = int(request.POST.get('age'))
+        login_user.phone_number = request.POST.get('phone_number')
+        login_user.address = request.POST.get('address')
+        login_user.save()
+
+    return render(request, 'seller/personalinfo.html', locals())
+
+
+@login_valid
+def goods_add(request):
+    err_msg = ''
+    user_id = request.COOKIES.get('seller_user_id')
+    login_user = models.SellerUser.objects.get(id=int(user_id))
+    if request.method == 'POST':
+        data = request.POST
+        files = request.FILES
+        if data and files:
+            new_goods = models.Goods()
+            new_goods.goods_num = data.get('goods_num')
+            new_goods.goods_name = data.get('goods_name')
+            new_goods.goods_price = data.get('goods_price')
+            new_goods.goods_count = data.get('goods_count')
+            new_goods.goods_location = data.get('goods_location')
+            new_goods.goods_safe_date = data.get('goods_safe_date')
+            new_goods.goods_pro_time = data.get('goods_pro_time')
+            new_goods.goods_description = data.get('goods_description')
+
+            goods_type_id = int(data.get('goods_type'))
+            new_goods.goods_type = models.GoodsType.objects.get(id=goods_type_id)
+            new_goods.goods_store = login_user
+
+            new_goods.goods_picture = files.get('goods_picture')
+            new_goods.save()
+        else:
+            err_msg = "商品信息不完整！"
+    return render(request, 'seller/goodsadd.html', locals())
+
+
+@login_valid
+def goods_list(request, status=1, page=1):
+    user_id = request.COOKIES.get('seller_user_id')
+    login_user = models.SellerUser.objects.get(id=int(user_id))
+    page = int(page)
+    status = int(status)
+    if status == 1:
+        goods_types = '在售商品'
+        goods_operation = '下架'
+    else:
+        goods_types = '下架商品'
+        goods_operation = '上架'
+    page_size = 6
+    goods = models.Goods.objects.filter(goods_store=login_user, goods_status=status)
+    goods_page = Paginator(goods, page_size)  # 分页
+    goods_list = goods_page.page(page)
+    page_range = list(goods_page.page_range)
+
+    page_prev = page - 1  # 上一页
+    page_next = page + 1  # 下一页
+    if page_prev < 1:
+        page_prev = 1
+    if page_next > goods_page.num_pages:  # 总页数
+        page_next = goods_page.num_pages
+    return render(request, 'seller/goodslist.html', locals())
+
+
+@login_valid
+def goods_operate(request, status, ids):
+    status = int(status)
+    ids = int(ids)
+    g = models.Goods.objects.get(id=ids)
+    if status == 1:
+        g.goods_status = 0
+    else:
+        g.goods_status = 1
+    g.save()
+    url = request.META.get('HTTP_REFERER', '/seller/goods/status/1')  # 返回请求页
+    return redirect(url)
