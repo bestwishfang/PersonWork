@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 
 from Buyer import models, forms
+from Seller.models import GoodsType, Goods
 
 
 def set_pwd(password):
@@ -98,5 +99,129 @@ def index(request):
     buyer_user_id = request.COOKIES.get('buyer_user_id')
     if buyer_user_id:
         buyer_user = models.BuyerUser.objects.get(id=int(buyer_user_id))
+    goods_type = GoodsType.objects.all()
+    result = []
+    for gt in goods_type:
+        goods = gt.goods_set.order_by('-goods_pro_time')
+        if len(goods) >= 4:
+            goods_list = goods[:4]
+            result.append({
+                'gt': gt,
+                'goods_list': goods_list
+            })
 
     return render(request, 'buyer/index.html', locals())
+
+
+def goods_list(request):
+    ty = request.GET.get('ty')
+    kw = request.GET.get('kw')
+    goods_display = []
+    if ty == 't':
+        gt = GoodsType.objects.get(id=int(kw))
+        goods_display = gt.goods_set.order_by('-goods_pro_time')
+    elif ty == 'k':
+        goods_display = Goods.objects.filter(goods_name__contains=kw).order_by('-goods_pro_time')
+
+    return render(request, 'buyer/goodslist.html', locals())
+
+
+def goods_detail(request, idn):
+    goods = Goods.objects.get(id=int(idn))
+    return render(request, 'buyer/goodsdetail.html', locals())
+
+
+@login_valid
+def buyer_add_goods(request):
+    buyer_user_id = int(request.COOKIES.get('buyer_user_id'))
+    goods_id = request.GET.get('goods_id')
+    count = request.GET.get('count')
+    if goods_id and count:
+        buy_user = models.BuyerUser.objects.get(id=int(buyer_user_id))
+        buy_user_cart = buy_user.cartone_set.filter(status=1)
+        for g in buy_user_cart:
+            if g.goods.id == int(goods_id):
+                g.count += int(count)
+                g.save()
+                break
+        else:
+            goods = Goods.objects.get(id=int(goods_id))
+            new_add_cart = models.CartOne()
+            new_add_cart.buy_user = buy_user
+            new_add_cart.goods = goods
+            new_add_cart.count = int(count)
+            new_add_cart.save()
+
+    url = request.META.get('HTTP_REFERER', '/')
+    return redirect(url)
+
+
+@login_valid
+def ajax_buyer_add_goods(request):
+    result = {
+        'code': 200,
+        'data': '',
+    }
+    if request.method == 'POST':
+        buyer_user_id = int(request.COOKIES.get('buyer_user_id'))
+        goods_id = request.POST.get('goods_id')
+        count = request.POST.get('count', 1)
+        buy_user = models.BuyerUser.objects.get(id=int(buyer_user_id))
+        buy_user_cart = buy_user.cartone_set.filter(status=1)
+        for g in buy_user_cart:
+            if g.goods.id == int(goods_id):
+                g.count += int(count)
+                goods = Goods.objects.get(id=int(goods_id))
+                if g.count > goods.goods_count:
+                    g.count = goods.goods_count
+                    result['data'] += '修改添加商品数量为该商品库存量'
+                g.total_price = round(goods.goods_price * g.count, 2)
+                g.save()
+                break
+        else:
+            goods = Goods.objects.get(id=int(goods_id))
+            new_add_cart = models.CartOne()
+            new_add_cart.buy_user = buy_user
+            new_add_cart.goods = goods
+            new_add_cart.count = int(count)
+            new_add_cart.total_price = round(goods.goods_price * new_add_cart.count, 2)
+            new_add_cart.save()
+        result['data'] += "加入购物车成功"
+    else:
+        result['code'] = 500
+        result['data'] += "加入购物车失败"
+    return JsonResponse(result)
+
+
+@login_valid
+def ajax_add_reduce(request):
+    result = {
+        'code': 200,
+        'data': '',
+    }
+    buyer_user_id = int(request.COOKIES.get('buyer_user_id'))
+    goods_id = int(request.GET.get('goods_id'))
+    count = int(request.GET.get('count'))
+    buy_user = models.BuyerUser.objects.get(id=int(buyer_user_id))
+    cartone_obj = buy_user.cartone_set.get(goods_id=goods_id)
+    if count <= 0:
+        count = 0
+    elif count >= cartone_obj.goods.goods_count:
+        count = cartone_obj.goods.goods_count
+    cartone_obj.count = count
+    cartone_obj.total_price = cartone_obj.goods.goods_price * count
+    cartone_obj.save()
+    result['data'] = '商品数量修改成功'
+    return JsonResponse(result)
+
+
+@login_valid
+def personal_cart(request):
+    buyer_user_id = int(request.COOKIES.get('buyer_user_id'))
+    buy_user = models.BuyerUser.objects.get(id=int(buyer_user_id))
+    cart_goods = buy_user.cartone_set.filter(status=1, count__gte=1).order_by('-date')
+    count = len(cart_goods)
+
+    return render(request, 'buyer/personalcart.html', locals())
+
+
