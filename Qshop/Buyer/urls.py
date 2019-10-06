@@ -15,4 +15,10 @@ urlpatterns = [
     path('ajaxaddreduce/', views.ajax_add_reduce),
     path('ajaxaddgoods/', views.ajax_buyer_add_goods),
 
+    path('neworderinfo/', views.new_order_info),
+    path('alipay/', views.ali_pay),
+    path('payinfo/', views.pay_info),
+    path('buserinfo/', views.buyer_user_info),
+    re_path(r'buserallorder/(?P<page>\d)', views.buyer_user_all_order),
+
 ]

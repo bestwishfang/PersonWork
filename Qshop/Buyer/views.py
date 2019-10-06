@@ -1,11 +1,15 @@
 import time
+import random
 import hashlib
+from alipay import AliPay
 
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 
 from Buyer import models, forms
 from Seller.models import GoodsType, Goods
+from Qshop.settings import ALIPAY_PUBLIC, APP_PRIVATE, ALIPAY_URL
 
 
 def set_pwd(password):
@@ -28,7 +32,15 @@ def login_valid(func):
     return inner
 
 
+def random_str():
+    string = 'abcdefghigklmnopqrstuvwxyz'
+    ret = ''
+    for i in range(4):
+        ret += random.choice(string)
+    return ret
+
 # Create your views here.
+
 
 def register(request):
     err_msg = ''
@@ -225,3 +237,108 @@ def personal_cart(request):
     return render(request, 'buyer/personalcart.html', locals())
 
 
+@login_valid
+def buyer_user_info(request):
+    return render(request, 'buyer/buyeruserinfo.html', locals())
+
+
+@login_valid
+def buyer_user_all_order(request,page=1):
+    page = int(page)
+    page_size = 6
+    buyer_user_id = int(request.COOKIES.get('buyer_user_id'))
+    buyer_user = models.BuyerUser.objects.get(id=buyer_user_id)
+    orders = buyer_user.order_set.all().order_by('-order_date')
+    orders_page = Paginator(orders, page_size)
+    order_list = orders_page.page(page)
+    page_range = list(orders_page.page_range)
+
+    page_prev = page - 1  # 上一页
+    page_next = page + 1  # 下一页
+    if page_prev < 1:
+        page_prev = 1
+    if page_next > orders_page.num_pages:  # 总页数
+        page_next = orders_page.num_pages
+
+    return render(request, 'buyer/buyerallorder.html', locals())
+
+
+# 单个提交订单 和 购物车合并
+@login_valid
+def new_order_info(request):
+    goods_info = []
+    yun_fee = 6
+    total_fee = 0
+    buyer_user_id = int(request.COOKIES.get('buyer_user_id'))
+    request_data = request.GET
+    goods_id = request_data.get('goods_id')
+    count = request_data.get('count')
+    if goods_id and count:
+        goods_info.append((int(goods_id), int(count)))
+    for k, v in request_data.items():
+        if k.startswith('check_'):
+            goods_id = k.rsplit('_', 1)[1]
+            count = request_data.get('count_' + goods_id)
+            goods_info.append((int(goods_id), int(count)))
+    if request_data:
+        new_order = models.Order()
+        new_order.order_num = time.strftime('%Y%m%d%H%M%S') + random_str()
+        new_order.order_user = models.BuyerUser.objects.get(id=buyer_user_id)
+        new_order.save()
+
+        for goods_id, count in goods_info:
+            goods = Goods.objects.get(id=int(goods_id))
+            new_order_info = models.OrderInfo()
+
+            new_order_info.order_id = new_order
+            new_order_info.store_id = goods.goods_store
+            new_order_info.goods_id = int(goods_id)
+            new_order_info.goods_name = goods.goods_name
+            new_order_info.goods_picture = goods.goods_picture
+            new_order_info.goods_count = int(count)
+            new_order_info.goods_price = goods.goods_price
+            new_order_info.goods_total_price = round(goods.goods_price * int(count), 2)
+            new_order_info.save()
+            total_fee += new_order_info.goods_total_price
+        new_order.order_total = round(total_fee, 2)
+        new_order.save()
+        total_fee += yun_fee
+        total_fee = round(total_fee, 2)
+    return render(request, 'buyer/orderinfo.html', locals())
+
+
+@login_valid
+def ali_pay(request):
+    order_num = request.GET.get('order_num')
+    total_fee = request.GET.get('total_fee')
+    subject = request.GET.get('subject')
+    # 实例化支付
+    ali_pay = AliPay(
+        appid="2016101200667842",
+        app_notify_url=None,
+        alipay_public_key_string=ALIPAY_PUBLIC,
+        app_private_key_string=APP_PRIVATE,
+        sign_type="RSA2"
+    )
+
+    # 实例化订单
+    order_string = ali_pay.api_alipay_trade_page_pay(
+        out_trade_no=order_num,
+        total_amount=str(total_fee),
+        subject=subject,
+        return_url='http://127.0.0.1:8080/buyer/payinfo/',
+        notify_url=None
+    )
+    ret = ALIPAY_URL + '?' + order_string
+    return redirect(ret)
+
+
+@login_valid
+def pay_info(request):
+    order_num = request.GET.get('out_trade_no')
+    if order_num:
+        order = models.Order.objects.get(order_num=order_num)
+        order.order_status = 1
+        order.save()
+        order.orderinfo_set.all().update(status=1)
+    return render(request, 'buyer/payinfo.html', locals())
