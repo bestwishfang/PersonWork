@@ -39,3 +39,14 @@ class Leave(BaseModel):
     request_description = models.Column(models.Text)  # 请假事由
     request_phone = models.Column(models.String(32))  # 联系方式
     request_status = models.Column(models.String(32))  # 假条状态
+
+
+# 定义表
+class Curriculum(BaseModel):
+    __tablename__ = "curriculum"
+    c_id = models.Column(models.String(32))
+    c_name = models.Column(models.String(32))
+    c_time = models.Column(models.Date)
+
+    def __repr__(self):
+        return self.c_name

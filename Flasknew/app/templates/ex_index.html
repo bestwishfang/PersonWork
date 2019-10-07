@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    index
+{% endblock %}
+
+{% block content %}
+    {% for c in curr_list %}
+        <p>{{ c.c_name }}</p>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}
+    个人中心
+{% endblock %}
+
+{% block label %}
+
+{% endblock %}
+
+{% block content %}
+    <!--个人详情 -->
+    <div class="row">
+        <div class="col-lg-12">
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">个人详情</h6>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <td rowspan="3">
+                            <img style="width: 80%;" src="/static/img/new_photo.jpg">
+                        </td>
+                        <th>姓名</th>
+                        <td>Fang</td>
+                        <th>性别</th>
+                        <td>男</td>
+                    </tr>
+                    <tr>
+                        <th>年龄</th>
+                        <td>29</td>
+                        <th>身份</th>
+                        <td>学员</td>
+                    </tr>
+                    <tr>
+                        <th>学科</th>
+                        <td>python</td>
+                        <th>阶段</th>
+                        <td>python阶段二、python阶段三</td>
+                    </tr>
+                    <tr>
+                        <th>联系方式</th>
+                        <td>13331153360</td>
+                        <th>家庭住址</th>
+                        <td colspan="2">Anhui China</td>
+                    </tr>
+                </table>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!--课程表-->
+    <div class="row">
+            <div class="col-lg-12">
+              <!-- Circle Buttons -->
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">课程表</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>周一</th>
+                            <th>周二</th>
+                            <th>周三</th>
+                            <th>周四</th>
+                            <th>周五</th>
+                            <th>周六</th>
+                            <th>周日</th>
+                        </tr>
+                        {% for w in calendar %}
+                            <tr>
+                                {% for d in w %}
+                                    <td>{{ d }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+              </div>
+            </div>
+        </div>
+{% endblock %}
+
+
