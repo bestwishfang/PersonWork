@@ -27,7 +27,7 @@ def login_valid(func):
         if cookie_email and cookie_email == session_email:
             return func(request, *args, **kwargs)
         else:
-            return redirect('/seller/login/')
+            return redirect('/buyer/login/')
 
     return inner
 
@@ -326,7 +326,7 @@ def ali_pay(request):
         out_trade_no=order_num,
         total_amount=str(total_fee),
         subject=subject,
-        return_url='http://127.0.0.1:8080/buyer/payinfo/',
+        return_url='http://127.0.0.1:8000/buyer/payinfo/',
         notify_url=None
     )
     ret = ALIPAY_URL + '?' + order_string
