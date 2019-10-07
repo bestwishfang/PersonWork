@@ -5,8 +5,9 @@ import functools
 from flask import request
 from flask import session
 from flask import render_template, redirect
+from flask_restful import Resource
 
-from . import main
+from . import main, api
 from app.models import *
 
 
@@ -305,3 +306,89 @@ class Calendar:
 def exindex():
     curr_list = Curriculum.query.all()
     return render_template("ex_index.html", curr_list=curr_list)
+
+
+@api.resource('/api/leave/')  # ******** api.resource
+class LeaveApi(Resource):
+    def __init__(self, *args, **kwargs):
+        super(LeaveApi, self).__init__(*args, **kwargs)
+        self.ret = {
+            'version': '1.0',
+            'data': []
+        }
+
+    def set_data(self, leave):
+        result_data = {
+            'request_name': leave.request_name,
+            'request_type': leave.request_type,
+            'request_start_time': leave.request_start_time,
+            'request_end_time': leave.request_end_time,
+            'request_description': leave.request_description,
+            'request_phone': leave.request_phone,
+        }
+        return result_data
+
+    def get(self):
+        result = []
+        # print(request.data)
+        # print(request.form)
+        # print(request.args)  ImmutableMultiDict([('id', '5')])
+        data = request.args
+        id = data.get('id')
+        if id:
+            leave = Leave.query.get(int(id))
+            result.append(self.set_data(leave))
+        else:
+            leaves = Leave.query.all()
+            # print(leaves)  # [<Leave 1>, <Leave 2>]
+            for leave in leaves:
+                result.append(self.set_data(leave))
+        self.ret['data'] = result
+        return self.ret
+
+    def post(self):
+        result = []
+        data = request.form
+        request_id = data.get('request_id')
+        request_name = data.get('request_name')
+        request_type = data.get('request_type')
+        request_start_time = data.get('request_start_time')
+        request_end_time = data.get('request_end_time')
+        request_description = data.get('request_description')
+        request_phone = data.get('request_phone')
+
+        leave = Leave()
+        leave.request_id = int(request_id)
+        leave.request_name = request_name
+        leave.request_type = request_type
+        leave.request_start_time = request_start_time
+        leave.request_end_time = request_end_time
+        leave.request_description = request_description
+        leave.request_phone = request_phone
+        leave.save()
+
+        result.append(self.set_data(leave))
+        self.ret['data'] = result
+        return self.ret
+
+    def put(self):
+        result = []
+        data = request.form
+        # print(type(data))  # <class 'werkzeug.datastructures.ImmutableMultiDict'>
+        id = data.get('id')
+        leave = Leave.query.get(int(id))
+        for k, v in data.items():
+            if k != 'id':
+                setattr(leave, k, v)
+        leave.save()
+        result.append(self.set_data(leave))
+        self.ret['data'] = result
+        return self.ret
+
+    def delete(self):
+        data = request.form
+        id = data.get('id')
+        leave = Leave.query.get(int(id))
+        leave.delete()
+        self.ret['data'] = "id为{}的数据，已删除。 ".format(id)
+        return self.ret
