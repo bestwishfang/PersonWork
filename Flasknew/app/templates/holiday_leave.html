@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}
+    请假
+{% endblock %}
+
+{% block style %}
+    <style>
+        th{
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block label %}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <table class="table table-bordered">
+                <tr>
+                    <th colspan="4" style="text-align: center"><h1>请假条</h1></th>
+                </tr>
+                <tr>
+                    <th>请假人姓名</th>
+                    <td><input class="form-control form-control-user" type="text" name="request_user" placeholder="请假人"></td>
+                    <th>请假类型</th>
+                    <td>
+                        <select class="form-control form-control-user" name="request_type">
+                            <option>事假</option>
+                            <option>病假</option>
+                            <option>婚假</option>
+                            <option>产假</option>
+                            <option>年假</option>
+                            <option>缺勤</option>
+                            <option>加班</option>
+                            <option selected="selected">调休</option>
+                            <option>出差</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>起始时间</th>
+                    <td><input class="form-control form-control-user" type="date" name="start_time"></td>
+                    <th>结束时间</th>
+                    <td><input class="form-control form-control-user" type="date" name="end_time"></td>
+                </tr>
+                <tr>
+                    <th>联系方式</th>
+                    <td><input class="form-control form-control-user" type="text" name="phone"></td>
+                    <th>请假天数</th>
+                    <td>0天</td>
+                </tr>
+                <tr>
+                    <th>描述</th>
+                    <td colspan="2">
+                        <textarea class="form-control form-control-user" name="request_description">
+
+                        </textarea>
+                    </td>
+                    <td>
+                        <input class="btn btn-user btn-primary" type="submit" value="提交">
+                    </td>
+                </tr>
+        </table>
+    </form>
+{% endblock %}
