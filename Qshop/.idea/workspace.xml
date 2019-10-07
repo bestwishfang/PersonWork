@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f19b8ee4-0159-4239-838a-674cf3ec3150" name="Default Changelist" comment="支付功能">
-      <change beforePath="$PROJECT_DIR$/../Flasknew/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Flasknew/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Buyer/templates/buyer/buyerallorder.html" beforeDir="false" afterPath="$PROJECT_DIR$/Buyer/templates/buyer/buyerallorder.html" afterDir="false" />
-    </list>
+    <list default="true" id="f19b8ee4-0159-4239-838a-674cf3ec3150" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,8 +79,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Buyer/templates/buyer/goodsdetail.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="148" column="13" lean-forward="true" selection-start-line="148" selection-start-column="13" selection-end-line="148" selection-end-column="13" />
+            <state relative-caret-position="370">
+              <caret line="149" column="14" lean-forward="true" selection-start-line="149" selection-start-column="14" selection-end-line="149" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -262,7 +259,7 @@
       <workItem from="1570255741258" duration="16766000" />
       <workItem from="1570365584482" duration="8442000" />
       <workItem from="1570408036423" duration="2779000" />
-      <workItem from="1570454827140" duration="2917000" />
+      <workItem from="1570454827140" duration="3052000" />
     </task>
     <task id="LOCAL-00001" summary="基本框架和登录功能">
       <created>1570277726368</created>
@@ -299,16 +296,23 @@
       <option name="project" value="LOCAL" />
       <updated>1570370334247</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Django项目订单流程">
+      <created>1570459022786</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1570459022786</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30904000" />
+    <option name="totallyTimeSpent" value="31039000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18003026" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18003026" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -341,7 +345,8 @@
     <MESSAGE value="分页功能" />
     <MESSAGE value="ajax实现添加商品到购物车" />
     <MESSAGE value="支付功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="支付功能" />
+    <MESSAGE value="Django项目订单流程" />
+    <option name="LAST_COMMIT_MESSAGE" value="Django项目订单流程" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Seller/forms.py">
@@ -589,8 +594,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Buyer/templates/buyer/goodsdetail.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="148" column="13" lean-forward="true" selection-start-line="148" selection-start-column="13" selection-end-line="148" selection-end-column="13" />
+        <state relative-caret-position="370">
+          <caret line="149" column="14" lean-forward="true" selection-start-line="149" selection-start-column="14" selection-end-line="149" selection-end-column="14" />
         </state>
       </provider>
     </entry>
