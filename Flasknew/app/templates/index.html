@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+    <body>
+        <h1>this is index I am {{ name }}</h1>
+        <div>
+            <b>jinja2变量索引</b>
+            <hr>
+                {{ name.1 }}
+            <hr>
+            <b>jinja2变量方法</b>
+            <hr>
+                {{ name.upper() }}
+            <hr>
+            <b>jinja2变量方法传参</b>
+            <hr>
+                {{ name.split('o') }}
+            <hr>
+            <b>jinja2变量运算</b>
+            <hr>
+                {{ name+'好帅' }}
+            <hr>
+        </div>
+        <div>
+            <b>jinja2循环</b>
+            <hr>
+                {% for n in name %}
+                    <p style="color: red;">{{ n+"a" }}</p>
+                {% endfor %}
+        </div>
+        <div>
+            <b>jinja2判断</b>
+            <hr>
+                {% if name == 'laobian'%}
+                    <p style="color: red;">{{ name }}</p>
+                {% else %}
+                     <p style="color: red;">没有名称</p>
+                {% endif %}
+        </div>
+    </body>
+</html>

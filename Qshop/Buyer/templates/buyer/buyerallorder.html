@@ -75,7 +75,7 @@
                         <td width="15%">{{ order.order_total }}元</td>
                         {% ifequal order.order_status 0 %}
                         <td width="15%">待付款</td>
-                        <td width="15%"><a href="#" class="oper_btn">去付款</a></td>
+                        <td width="15%"><a href="/buyer/alipay/?order_num={{ order.order_num }}&total_fee={{ order.order_total }}&subject={{ order.orderinfo_set.first.goods_name }}" class="oper_btn">去付款</a></td>
                         {% endifequal %}
                         {% ifequal order.order_status 1 %}
                         <td width="15%">已付款</td>
