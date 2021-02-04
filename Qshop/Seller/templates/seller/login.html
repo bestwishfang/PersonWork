@@ -115,7 +115,7 @@
                   type: 'POST',
                   data: {
                       "email": email,
-                      "csrfmiddlewaretoken": "{{ csrf_token }}"
+                      "csrfmiddlewaretoken": "{{ csrf_token }}",
                   } ,
                   success: function (data) {
                       console.log(data);

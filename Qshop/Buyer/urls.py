@@ -19,6 +19,6 @@ urlpatterns = [
     path('alipay/', views.ali_pay),
     path('payinfo/', views.pay_info),
     path('buserinfo/', views.buyer_user_info),
-    re_path(r'buserallorder/(?P<page>\d)', views.buyer_user_all_order),
+    re_path(r'buserallorder/(?P<page>\d)/', views.buyer_user_all_order),
 
 ]
